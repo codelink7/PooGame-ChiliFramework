@@ -28,23 +28,21 @@ Game::Game(MainWindow& wnd)
 	wnd(wnd),
 	gfx(wnd)
 {
-
+	
 	std::random_device rand;
-	std::mt19937 rng(rand());
+    std::mt19937 rng(rand());
 	std::uniform_int_distribution<int> xdist(0, 700);
 	std::uniform_int_distribution<int> ydist(0, 550);
 
-
 	poo0X = xdist(rng);
 	poo0Y = ydist(rng);
-
 
 	poo1X = xdist(rng);
 	poo1Y = ydist(rng);
 
 	poo2X = xdist(rng);
 	poo2Y = ydist(rng);
-
+	
 }
 
 void Game::Go()
@@ -73,7 +71,7 @@ void Game::UpdateModel()
 		}
 
 		if (wnd.kbd.KeyIsPressed(VK_UP))
-		{
+		{  
 			dudeY -= 3;
 		}
 		if (wnd.kbd.KeyIsPressed(VK_DOWN))
@@ -111,6 +109,7 @@ void Game::UpdateModel()
 		}
 		
 	}
+
 		else
 		{
 			if (wnd.kbd.KeyIsPressed(VK_RETURN))
@@ -118,7 +117,42 @@ void Game::UpdateModel()
 				isStarted = true;
 			}
 		}
-	
+
+
+	poo0X += v0X;
+	poo0Y += v0Y;
+
+	poo1X += v1X;
+	poo1Y += v1Y;
+
+	poo2X += v2X;
+	poo2Y += v2Y;
+
+
+
+
+	 
+
+	v0X = reboundX(poo0X, 24, v0X);
+	v0Y = reboundY(poo0Y, 24, v0Y);
+
+	v1X = reboundX(poo1X, 24, v1X);
+	v1Y = reboundY(poo1Y, 24, v1Y);
+
+	v2X = reboundX(poo2X, 24, v2X);
+	v2Y = reboundY(poo2Y, 24, v2Y);
+
+
+	poo0X = clampScreenX(poo0X, 24);
+	poo0Y = clampScreenY(poo0Y, 24);
+
+	poo1X = clampScreenX(poo1X, 24);
+	poo1Y = clampScreenY(poo1Y, 24);
+
+	poo2X = clampScreenX(poo2X, 24);
+	poo2Y = clampScreenY(poo2Y, 24);
+
+
 }
 
 void Game::drawFace(int x, int y)
@@ -29036,7 +29070,7 @@ void Game::restartGame()
 	dudeX = 400;
 	dudeY = 300;
 	
-
+	
 	std::random_device rand;
 	std::mt19937 rng(rand());
 	std::uniform_int_distribution<int> xdist(0, 700);
@@ -29051,6 +29085,7 @@ void Game::restartGame()
 
 	poo2X = xdist(rng);
 	poo2Y = ydist(rng);
+	
 }
 
 int Game::clampScreenX(int x, int width)
@@ -29090,7 +29125,42 @@ int Game::clampScreenY(int y, int height)
 	}
 }
 
-bool Game::isColliding(int x0, int y0, int x1, int y1, int height0, int width0, int height1, int width1)
+int Game::reboundX(int x, int width, int vx)
+{
+
+	const int right = x + width;
+	
+	if (right >= gfx.ScreenWidth || x <= 0)
+	{
+		return -vx;
+	}
+	else
+	{
+		return vx;
+	}
+	
+}
+
+int Game::reboundY(int y, int height, int vy)
+{
+
+	const int bottom = y + height;
+
+
+	if (bottom >= gfx.ScreenHeight || y <= 0)
+	{
+		
+		return -vy;
+	}
+
+	else
+	{
+		return vy;
+	}
+}
+
+bool Game::isColliding(int x0, int y0, int x1, int y1,
+	int height0, int width0,int height1, int width1)
 {
 	const int right0 = x0 + width0;
 	const int bottom0 = y0 + height0;
@@ -29108,7 +29178,7 @@ bool Game::isColliding(int x0, int y0, int x1, int y1, int height0, int width0, 
 void Game::ComposeFrame()
 {
 
-	if (!isStarted) 
+	if (!isStarted)
 	{
 		drawTitle(325, 211);
 	}
@@ -29131,6 +29201,7 @@ void Game::ComposeFrame()
 			drawPoo(poo1X, poo1Y);
 
 		}
+
 		if (!poo2isEaten)
 		{
 			drawPoo(poo2X, poo2Y);
@@ -29143,4 +29214,5 @@ void Game::ComposeFrame()
 		}
 
 	}
+
 }

@@ -23,6 +23,7 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "Graphics.h"
+#include "Poo.h"
 
 class Game
 {
@@ -31,6 +32,8 @@ public:
 	Game( const Game& ) = delete;
 	Game& operator=( const Game& ) = delete;
 	void Go();
+
+
 
 private:
 	void ComposeFrame();
@@ -46,7 +49,13 @@ private:
 	int clampScreenX(int x, int width);
 	int clampScreenY(int y, int height);
 
+	int reboundX(int x, int width, int vx);
+	int reboundY(int y, int height, int vy);
+
+
 	bool isColliding(int x0, int y0, int x1, int y1, int height0, int width0, int height1, int width1);
+
+
 	
 	/********************************/
 private:
@@ -54,8 +63,6 @@ private:
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
-
-
 
 
 	bool isStarted = false;
@@ -66,18 +73,10 @@ private:
 	int width = 20;
 
 
+	Poo poo0;
+	Poo poo1;
+	Poo poo2;
 
-	int poo0X = 200;
-	int poo0Y = 200;
-	bool poo0isEaten = false;
 
-
-	int poo1X = 600;
-	int poo1Y = 500;
-	bool poo1isEaten = false;
-
-	int poo2X = 350;
-	int poo2Y = 570;
-	bool poo2isEaten = false;
 	/********************************/
 };
