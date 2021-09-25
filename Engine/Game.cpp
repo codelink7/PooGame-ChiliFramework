@@ -33,15 +33,37 @@ Game::Game(MainWindow& wnd)
     std::mt19937 rng(rand());
 	std::uniform_int_distribution<int> xdist(0, 700);
 	std::uniform_int_distribution<int> ydist(0, 550);
+	std::uniform_int_distribution<int> vdist(-1, 2);
+	
 
-	poo0X = xdist(rng);
-	poo0Y = ydist(rng);
+	player.x = 400;
+	player.y = 300;
+	
 
-	poo1X = xdist(rng);
-	poo1Y = ydist(rng);
 
-	poo2X = xdist(rng);
-	poo2Y = ydist(rng);
+	poo0.x = xdist(rng);
+	poo0.y = ydist(rng);
+
+	poo1.x = xdist(rng);
+	poo1.y = ydist(rng);
+
+	poo2.x = xdist(rng);
+	poo2.y = ydist(rng);
+	
+	poo3.x = xdist(rng);
+	poo3.y = ydist(rng);
+
+	poo0.vx = 1;
+	poo0.vy = 1;
+
+	poo1.vx = -1;
+	poo1.vy = -1;
+
+	poo2.vx = -1;
+	poo2.vy = 1;
+
+	poo3.vx = 1;
+	poo3.vy = -1;
 	
 }
 
@@ -62,40 +84,43 @@ void Game::UpdateModel()
 
 		if (wnd.kbd.KeyIsPressed(VK_RIGHT))
 		{
-			dudeX += 3;
+			player.x += 3;
 		}
 
 		if (wnd.kbd.KeyIsPressed(VK_LEFT))
 		{
-			dudeX -= 3;
+			player.x -= 3;
 		}
 
 		if (wnd.kbd.KeyIsPressed(VK_UP))
 		{  
-			dudeY -= 3;
+			player.y -= 3;
 		}
 		if (wnd.kbd.KeyIsPressed(VK_DOWN))
 		{
-			dudeY += 3;
+			player.y += 3;
 		}
 
-		dudeX = clampScreenX(dudeX, width);
-		dudeY = clampScreenY(dudeY, height);
 
-		if (isColliding(dudeX, dudeY, poo0X, poo0Y, height, width, 24, 24))
+		if (player.isCollidingwith(poo0.x, poo0.y, Poo::width, Poo::height))
 		{
-			poo0isEaten = true;
+			poo0.isEaten = true;
 		}
-		if (isColliding(dudeX, dudeY, poo1X, poo1Y, height, width, 24, 24))
+		if (player.isCollidingwith(poo1.x,poo1.y, Poo::width, Poo::height))
 		{
-			poo1isEaten = true;
+			poo1.isEaten = true;
 		}
-		if (isColliding(dudeX, dudeY, poo2X, poo2Y, height, width, 24, 24))
+		if (player.isCollidingwith(poo2.x, poo2.y, Poo::width, Poo::height))
 		{
-			poo2isEaten = true;
+			poo2.isEaten = true;
 		}
 
-		if (poo0isEaten && poo1isEaten && poo2isEaten)
+		if (player.isCollidingwith(poo3.x, poo3.y, Poo::width, Poo::height))
+		{
+			poo3.isEaten = true;
+		}
+
+		if (poo0.isEaten && poo1.isEaten && poo2.isEaten)
 		{
 			if (wnd.kbd.KeyIsPressed(VK_CONTROL))
 			{
@@ -119,39 +144,12 @@ void Game::UpdateModel()
 		}
 
 
-	poo0X += v0X;
-	poo0Y += v0Y;
+	player.clampScreen();
 
-	poo1X += v1X;
-	poo1Y += v1Y;
-
-	poo2X += v2X;
-	poo2Y += v2Y;
-
-
-
-
-	 
-
-	v0X = reboundX(poo0X, 24, v0X);
-	v0Y = reboundY(poo0Y, 24, v0Y);
-
-	v1X = reboundX(poo1X, 24, v1X);
-	v1Y = reboundY(poo1Y, 24, v1Y);
-
-	v2X = reboundX(poo2X, 24, v2X);
-	v2Y = reboundY(poo2Y, 24, v2Y);
-
-
-	poo0X = clampScreenX(poo0X, 24);
-	poo0Y = clampScreenY(poo0Y, 24);
-
-	poo1X = clampScreenX(poo1X, 24);
-	poo1Y = clampScreenY(poo1Y, 24);
-
-	poo2X = clampScreenX(poo2X, 24);
-	poo2Y = clampScreenY(poo2Y, 24);
-
+	poo0.Update();
+	poo1.Update();
+	poo2.Update();
+	poo3.Update();
 
 }
 
@@ -29064,11 +29062,11 @@ void Game::restartGame()
 {
 
 	isStarted = false;
-	poo0isEaten = false;
-	poo1isEaten = false;
-	poo2isEaten = false;
-	dudeX = 400;
-	dudeY = 300;
+	poo0.isEaten = false;
+	poo1.isEaten = false;
+	poo2.isEaten = false;
+	player.x = 400;
+	player.y = 300;
 	
 	
 	std::random_device rand;
@@ -29076,104 +29074,16 @@ void Game::restartGame()
 	std::uniform_int_distribution<int> xdist(0, 700);
 	std::uniform_int_distribution<int> ydist(0, 550);
 
-	poo0X = xdist(rng);
-	poo0Y = ydist(rng);
+	poo0.x = xdist(rng);
+	poo0.y = ydist(rng);
 
+	poo1.x = xdist(rng);
+	poo1.y = ydist(rng);
 
-	poo1X = xdist(rng);
-	poo1Y = ydist(rng);
-
-	poo2X = xdist(rng);
-	poo2Y = ydist(rng);
+	poo2.x = xdist(rng);
+	poo2.y = ydist(rng);
 	
 }
-
-int Game::clampScreenX(int x, int width)
-{
-	int right = x + width;
-	if (x <= 0)
-	{
-		return 1;
-	}
-	if (right >= gfx.ScreenWidth)
-	{
-		return (gfx.ScreenWidth - 1) - width;
-	}
-	else
-	{
-		return x;
-	}
-}
-
-int Game::clampScreenY(int y, int height)
-{
-	int bottom = y + height;
-
-	if (y <= 0)
-	{
-		return  1;
-	}
-
-	if (bottom >= gfx.ScreenHeight)
-	{
-		return (gfx.ScreenHeight - 1) - height;
-	}
-
-	else
-	{
-		return y;
-	}
-}
-
-int Game::reboundX(int x, int width, int vx)
-{
-
-	const int right = x + width;
-	
-	if (right >= gfx.ScreenWidth || x <= 0)
-	{
-		return -vx;
-	}
-	else
-	{
-		return vx;
-	}
-	
-}
-
-int Game::reboundY(int y, int height, int vy)
-{
-
-	const int bottom = y + height;
-
-
-	if (bottom >= gfx.ScreenHeight || y <= 0)
-	{
-		
-		return -vy;
-	}
-
-	else
-	{
-		return vy;
-	}
-}
-
-bool Game::isColliding(int x0, int y0, int x1, int y1,
-	int height0, int width0,int height1, int width1)
-{
-	const int right0 = x0 + width0;
-	const int bottom0 = y0 + height0;
-	const int right1 = x1 + width1;
-	const int bottom1 = y1 + height1;
-
-	return right0 >= x1 &&
-		bottom0 >= y1 &&
-		right1 >= x0 &&
-		bottom1 >= y0;
-			
-}
-
 
 void Game::ComposeFrame()
 {
@@ -29184,31 +29094,38 @@ void Game::ComposeFrame()
 	}
 	else
 	{
-		if (!(poo0isEaten && poo1isEaten && poo2isEaten))
+		if (!(poo0.isEaten && poo1.isEaten && poo2.isEaten))
 		{
-			drawFace(dudeX, dudeY);
+			drawFace(player.x, player.y);
 
 		}
 
 
 
-		if (!poo0isEaten)
+		if (!poo0.isEaten)
 		{
-			drawPoo(poo0X, poo0Y);
+			drawPoo(poo0.x, poo0.y);
 		}
-		if (!poo1isEaten)
+		if (!poo1.isEaten)
 		{
-			drawPoo(poo1X, poo1Y);
-
-		}
-
-		if (!poo2isEaten)
-		{
-			drawPoo(poo2X, poo2Y);
+			drawPoo(poo1.x, poo1.y);
 
 		}
 
-		if (poo0isEaten && poo1isEaten && poo2isEaten)
+		if (!poo2.isEaten)
+		{
+			drawPoo(poo2.x, poo2.y);
+
+		}
+
+		if (!poo3.isEaten)
+		{
+			drawPoo(poo3.x, poo3.y);
+
+		}
+
+
+		if (poo0.isEaten && poo1.isEaten && poo2.isEaten && poo3.isEaten)
 		{
 			drawGameOver(400 - 42, 300 - 32);
 		}

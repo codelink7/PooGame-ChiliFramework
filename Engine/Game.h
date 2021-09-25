@@ -24,6 +24,7 @@
 #include "Mouse.h"
 #include "Graphics.h"
 #include "Poo.h"
+#include "Dude.h"
 
 class Game
 {
@@ -46,16 +47,6 @@ private:
 	void drawGameOver(int x, int y);
 	void restartGame();
 
-	int clampScreenX(int x, int width);
-	int clampScreenY(int y, int height);
-
-	int reboundX(int x, int width, int vx);
-	int reboundY(int y, int height, int vy);
-
-
-	bool isColliding(int x0, int y0, int x1, int y1, int height0, int width0, int height1, int width1);
-
-
 	
 	/********************************/
 private:
@@ -67,15 +58,12 @@ private:
 
 	bool isStarted = false;
 
-	int	dudeX = 400;
-	int dudeY = 300;
-	int height = 20;
-	int width = 20;
-
+	Dude player;
 
 	Poo poo0;
 	Poo poo1;
 	Poo poo2;
+	Poo poo3;
 
 
 	/********************************/
