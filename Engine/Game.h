@@ -41,8 +41,6 @@ private:
 	void UpdateModel();
 	/********************************/
 	/*  User Functions              */
-	void drawFace(int x, int y);
-	void drawPoo(int x, int y);
 	void drawTitle(int x, int y);
 	void drawGameOver(int x, int y);
 	void restartGame();

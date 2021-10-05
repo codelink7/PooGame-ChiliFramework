@@ -1,12 +1,13 @@
 #pragma once
+#include "Graphics.h"
 
 class Dude
 {
 
 public:
 
-	bool isCollidingwith(int x, int y, int width, int height);
 	void clampScreen();
+	void draw(Graphics& gfx);
 
 	int	x;
 	int y;
